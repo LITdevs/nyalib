@@ -46,3 +46,10 @@ let newText = await nyaFile.getAssetText("assets/someText")
 // Notice we are using getCachedData for text
 let alreadyCachedText = nyaFile.getCachedData("assets/someText")
 ```
+
+### Help this isn't working!! It says not cached??
+
+Alright, let's check a couple things.
+
+1. Make sure you did not include the file extension in the cache call, or the get call
+2. Make sure you did not start either path with a /
