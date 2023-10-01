@@ -29,7 +29,7 @@ nyaFile.queueCache("assets/someJson")
 await nyaFile.waitAllCached()
 
 // We can now synchronously get the data url, for example to return an img element directly
-return <img src={nyaFile.getCachedDataUrl("assets/someAsset")} />
+return <img src={nyaFile.getCachedData("assets/someAsset")} />
 
 // Loading a new nyafile refreshes the cache
 await nyaFile.load("https://lightquark.network/not-not-default.nya")
