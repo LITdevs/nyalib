@@ -1,5 +1,5 @@
 {
-  "name": "nyalib",
+  "name": "@litdevs/nyalib",
   "version": "1.0.0",
   "description": "A library for parsing nyafiles",
   "main": "src/index.js",
