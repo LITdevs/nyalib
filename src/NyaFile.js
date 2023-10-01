@@ -5,16 +5,49 @@ export default class NyaFile {
 
     defaultFile;
     nyaFile;
+    dataUrlCache;
     constructor () {
         if (NyaFile._instance) return NyaFile._instance;
         NyaFile._instance = this;
+        this.dataUrlCache = {}
+    }
+
+    /**
+     * Ask to cache an asset for future use
+     * This should ideally be called during initial load AFTER loading a custom nyafile for assets that are going to be used
+     * @param filePath
+     */
+    queueCache(filePath) {
+        this.dataUrlCache[filePath] = this.getAssetDataUrl(filePath, true)
+    }
+
+    /**
+     * Promise that resolves once all queued assets are cached
+     * @return {Promise<void>}
+     */
+    async waitAllCached() {
+        await Promise.all(Object.values(this.dataUrlCache))
+    }
+
+    /**
+     * Performs a full cache refresh
+     */
+    async explodeCache() {
+        console.log(`Full refreshing cache with ${Object.keys(this.dataUrlCache).length} assets`)
+        for (const cachedAsset of Object.keys(this.dataUrlCache)) {
+            this.queueCache(cachedAsset)
+        }
+        //console.log("All entries re-queued")
+        await this.waitAllCached()
+        //console.log("Full cache refresh complete!")
+        return true
     }
 
     /**
      * Load a nyaFile from a URL
      * @param nyaFileUrl
      * @param isDefault
-     * @return {Promise<void>}
+     * @return {Promise<boolean>}
      */
     async load(nyaFileUrl, isDefault = false) {
         let nyaFileResponse = await fetch(nyaFileUrl);
@@ -24,6 +57,7 @@ export default class NyaFile {
         } else {
             this.nyaFile = await JSZip.loadAsync(nyaFileBlob)
         }
+        return await this.explodeCache()
     }
 
     /**
@@ -64,13 +98,32 @@ export default class NyaFile {
      * ```
      *
      * When there are multiple options one is picked at random
-     * @param imagePath
      * @example await getImageAssetDataUrl("/assets/spinner")
+     * @param filePath
+     * @param ignoreCache
      * @return {Promise<string>}
      */
-    async getAssetDataUrl(imagePath) {
-        let imageFile = await this.getFile(imagePath)
-        let imageBase64 = await imageFile.async("base64");
-        return `data:${nameToMime(imageFile.name)};base64,${imageBase64}`
+    async getAssetDataUrl(filePath, ignoreCache = false) {
+        if (!ignoreCache && this.dataUrlCache[filePath]) {
+            //console.log(`Returning cached asset for ${filePath}`)
+            return this.dataUrlCache[filePath];
+        }
+        let assetFile = await this.getFile(filePath);
+        let assetBase64 = await assetFile.async("base64");
+        let dataUrl = `data:${nameToMime(assetFile.name)};base64,${assetBase64}`;
+        if (ignoreCache || !this.dataUrlCache[filePath]) this.dataUrlCache[filePath] = dataUrl;
+        //console.log(`${filePath} added to cache`)
+        return dataUrl
+    }
+
+    /**
+     * If you are sure an asset is cached you can use this method to get the url synchronously
+     * @param filePath
+     * @return {string}
+     */
+    getCachedDataUrl(filePath) {
+        if (!this.dataUrlCache[filePath]) throw new Error(`Asset ${filePath} is not cached, but tried to get with getCachedDataUrl()`)
+        //console.log(`Returning cached asset for ${filePath}`)
+        return this.dataUrlCache[filePath]
     }
 }

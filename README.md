@@ -20,6 +20,20 @@ await nyaFile.load("https://lightquark.network/not-default.nya")
 let dataUrl = await nyaFile.getAssetDataUrl("assets/spinner")
 // This can be used as the src of a HTML img tag
 image.src = dataUrl
+
+// Cache some assets
+nyaFile.queueCache("assets/someAsset")
+nyaFile.queueCache("assets/someAsset2")
+nyaFile.queueCache("assets/someAsset3")
+await nyaFile.waitAllCached()
+
+// We can now synchronously get the data url, for example to return an img element directly
+return <img src={nyaFile.getCachedDataUrl("assets/someAsset")} />
+
+// Loading a new nyafile refreshes the cache
+await nyaFile.load("https://lightquark.network/not-not-default.nya")
+return <img src={nyaFile.getCachedDataUrl("assets/someAsset")} />
+// Returns different value than before
 ```
 
 ### Caveats
