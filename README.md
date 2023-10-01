@@ -53,3 +53,4 @@ Alright, let's check a couple things.
 
 1. Make sure you did not include the file extension in the cache call, or the get call
 2. Make sure you did not start either path with a /
+3. Make sure you call await nyaFile.waitAllCached() BEFORE trying to retrieve a cached asset, if you can't, use await nyaFile.getAsset* methods
