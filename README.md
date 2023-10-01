@@ -17,12 +17,12 @@ await nyaFile.load("https://lightquark.network/default.nya", true) // Replace UR
 await nyaFile.load("https://lightquark.network/not-default.nya")
 
 // Get a data url for an image in the nya file
-let dataUrl = await nyaFile.getImageAssetDataUrl("assets/spinner")
+let dataUrl = await nyaFile.getAssetDataUrl("assets/spinner")
 // This can be used as the src of a HTML img tag
 image.src = dataUrl
 ```
 
 ### Caveats
 
-- Only getImageAssetDataUrl is implemented, for sounds etc. more development needed
+- Only getAssetDataUrl is implemented. More development needed for things like the \<NyaAsset> React component
 - Only certain file types are recognized

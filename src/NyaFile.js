@@ -54,7 +54,7 @@ export default class NyaFile {
     }
 
     /**
-     * Get a data url for an image in the nya file
+     * Get a data url for an asset in the nya file
      * This example will find all of the following files
      * ```
      * /assets/spinner/1.png
@@ -68,7 +68,7 @@ export default class NyaFile {
      * @example await getImageAssetDataUrl("/assets/spinner")
      * @return {Promise<string>}
      */
-    async getImageAssetDataUrl(imagePath) {
+    async getAssetDataUrl(imagePath) {
         let imageFile = await this.getFile(imagePath)
         let imageBase64 = await imageFile.async("base64");
         return `data:${nameToMime(imageFile.name)};base64,${imageBase64}`

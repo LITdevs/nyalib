@@ -6,7 +6,7 @@ export default function nameToMime(filename) {
         case "png":
             return "image/png"
         case "svg":
-            return "application/svg+xml"
+            return "image/svg+xml"
         case "jpg":
         case "jpeg":
             return "image/jpeg"
