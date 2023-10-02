@@ -11,9 +11,16 @@ export default class NyaFile {
      * - data -> relevant data or promise for getting it
      */
     assetCache;
-    constructor () {
-        if (NyaFile._instance) return NyaFile._instance;
-        NyaFile._instance = this;
+
+    /**
+     * Create an instance of the NyaFile class
+     * Use identifier to have several NyaFiles loaded
+     * @param identifier
+     * @return {NyaFile}
+     */
+    constructor (identifier = "default") {
+        if (NyaFile[`_instance_${identifier}`]) return NyaFile[`_instance_${identifier}`];
+        NyaFile[`_instance_${identifier}`] = this;
         this.assetCache = {}
     }
 

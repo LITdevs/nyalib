@@ -7,8 +7,15 @@ This is a library used for handling nyafiles in some Lightquark clients.
 ```js
 import NyaFile from "nyalib"
 
-// Create instance of NyaFile (there can only be one)
+// Create instance of NyaFile
 const nyaFile = new NyaFile();
+
+// You can get this instance later
+const sameNyaFile = new NyaFile();
+// nyaFile and sameNyaFile are the same instance of NyaFile
+
+// If you need a separate instance provide an identifier
+const nyaFile2 = new NyaFile("themePreview");
 
 // Load default assets
 await nyaFile.load("https://lightquark.network/default.nya", true) // Replace URL here
