@@ -31,8 +31,8 @@ image.src = dataUrl
 // Cache some assets
 nyaFile.queueCache("assets/someAsset")
 nyaFile.queueCache("assets/someAsset2")
-nyaFile.queueCache("assets/someAsset3")
-nyaFile.queueCache("assets/someJson")
+nyaFile.queueCache("assets/someAsset3", "dataUrl") // Default is dataUrl for images, sound etc.
+nyaFile.queueCache("assets/someJson", "text") // Alternatively text for text, json etc.
 await nyaFile.waitAllCached()
 
 // We can now synchronously get the data url, for example to return an img element directly
@@ -61,3 +61,9 @@ Alright, let's check a couple things.
 1. Make sure you did not include the file extension in the cache call, or the get call
 2. Make sure you did not start either path with a /
 3. Make sure you call await nyaFile.waitAllCached() BEFORE trying to retrieve a cached asset, if you can't, use await nyaFile.getAsset* methods
+
+### Help!! I loaded a nyafile and the browser says out of memory?
+
+something too big
+
+I found that putting 70MB flac audio in the nyafile caused a bunch of issues
