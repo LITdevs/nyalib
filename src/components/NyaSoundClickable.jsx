@@ -1,4 +1,4 @@
-import NyaFile from "../NyaFile.js";
+import {NyaFile} from "../index.js";
 import React, {useEffect, useState} from "react";
 
 /**

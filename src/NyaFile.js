@@ -1,4 +1,4 @@
-import JSZip from "jszip";
+import * as JSZip from "jszip"
 import nameToMime from "./util/extensionToMime.js";
 
 export default class NyaFile {
