@@ -9,12 +9,13 @@ import React, {useEffect, useState} from "react";
  * </NyaSoundClickable>
  * ```
  * @param asset nyafile asset path
- * @param nyaFile Use to override NyaFile instance
+ * @param nyaFile NyaFile instance
  * @param children
  * @param volume Sound volume, defaults to 0.25
  * @return {JSX.Element}
  */
-export default function NyaSoundClickable({asset, volume, nyaFile = new NyaFile(), children}) {
+export default function NyaSoundClickable({asset, volume, nyaFile, children}) {
+    if (!nyaFile) throw new Error(`NyaSoundClickable for ${asset} without nyaFile prop`)
     const obtainNewAudio = () => {
         return new Promise(resolve => {
             nyaFile.getAssetDataUrl(asset, true).then(dataUrl => {
