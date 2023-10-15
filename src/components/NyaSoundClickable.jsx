@@ -3,11 +3,11 @@ import React, {useEffect, useState} from "react";
 
 /**
  * Wrapper component for buttons that should make a sound
- * @usage ```jsx
+ * @example
  * <NyaSoundClickable asset={"sfx/boom"}>
  *     <button>explosion sound!</button>
  * </NyaSoundClickable>
- * ```
+ *
  * @param asset nyafile asset path
  * @param nyaFile NyaFile instance
  * @param children
