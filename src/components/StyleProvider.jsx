@@ -22,7 +22,8 @@ export default function StyleProvider({asset, nyaFile}) {
         styleTag.appendChild(document.createTextNode(nyaFile.getCachedData(asset)));
         document.head.appendChild(styleTag);
         return () => {
-            document.querySelector(`style[data-nya-css-asset='${asset}']`).remove();
+            let styleTag = document.querySelector(`style[data-nya-css-asset='${asset}']`);
+            if (styleTag) styleTag.remove();
         }
     }, [asset]);
     return <></>
