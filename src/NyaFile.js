@@ -44,6 +44,18 @@ export default class NyaFile {
     }
 
     /**
+     * Returns list of asset paths
+     * Limitation: This does not cope with the variants in subfolder structure, instead of [folder] you will get [folder/1.png, folder/2.png], sorry :3
+     * @return {string[]}
+     */
+    listFiles() {
+        let files = this.nyaFile.file(/.+/).map(file => file.name);
+        let defaultFiles = this.defaultFile.file(/.+/).map(file => file.name);
+        let mergedArray = [...files, ...defaultFiles];
+        return mergedArray.filter((v, i) => mergedArray.indexOf(v) === i);
+    }
+
+    /**
      * Promise that resolves once all queued assets are cached
      * @return {Promise<void>}
      */

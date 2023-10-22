@@ -22,6 +22,10 @@ export default function nameToMime(filename) {
         // Data and other
         case "json":
             return "application/json"
+        case "otf":
+            return "font/opentype"
+        case "ttf":
+            return "font/ttf"
         default:
             return "application/octet-stream"
     }
