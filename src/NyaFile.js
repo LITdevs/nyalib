@@ -199,8 +199,8 @@ export default class NyaFile {
      */
     getCachedJson(filePath) {
         if (!this.assetCache[filePath]) throw new Error(`getCachedJson Tried to retrieve asset ${filePath} from cache but not cached`)
-        console.log(filePath)
-        console.log(this.assetCache[filePath])
+        // console.log(filePath)
+        // console.log(this.assetCache[filePath])
         return JSON.parse(this.assetCache[filePath].data);
     }
 }
