@@ -14,8 +14,7 @@ export default class NyaFile {
 
     /**
      * Create an instance of the NyaFile class
-     * Use identifier to have several NyaFiles loaded
-     * @param identifier
+     * @param identifier - Use the identifier if you need multiple NyaFile instances. Remember that a Nyafile can have one Nyafile overlaying it.
      * @return {NyaFile}
      */
     constructor (identifier = "default") {
@@ -78,14 +77,13 @@ export default class NyaFile {
     }
 
     /**
-     * Load a nyaFile from a URL
-     * @param nyaFileUrl
+     * Load a nyaFile from a blob. Use your preferred fetching library (fetch, axios, XMLHttpRequest, ...) to get one.
+     * @param {Blob} nyaFileBlob
      * @param isDefault
      * @return {Promise<boolean>}
+     * @see {@link }
      */
-    async load(nyaFileUrl, isDefault = false) {
-        let nyaFileResponse = await fetch(nyaFileUrl);
-        let nyaFileBlob = await nyaFileResponse.blob();
+    async load(nyaFileBlob, isDefault = false) {
         if (isDefault) {
             this.defaultFile = await JSZip.loadAsync(nyaFileBlob);
         } else {
