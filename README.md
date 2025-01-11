@@ -43,7 +43,7 @@ return <img src={nyafile.getFileURL("assets/spinner")} />
 // Returns different value than before
 
 // Get the contents of a text file
-let newJson = await nyafile.getFileText("assets/hakaselore")
-// Or 
-let newText = await nyafile.getAssetText("assets/someText")
+let lore = await nyafile.getFileText("assets/hakaselore")
+// Or pre-parse it as JSON
+let changelog = await nyafile.getFileJSON("assets/changelog")
 ```
