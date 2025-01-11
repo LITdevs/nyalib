@@ -8,6 +8,7 @@
   "license": "UNLICENSED",
   "type": "module",
   "dependencies": {
-    "jszip": "^3.10.1"
+    "fflate": "^0.8.2",
+    "mime": "^4.0.6"
   }
 }
