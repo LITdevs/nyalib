@@ -28,7 +28,7 @@ Why no file extension? Let's say your original asset was a jpg and the skin has 
 
 ### Alternative formats
 
-Of course, you can read your assets in other ways as well. Like `getFileURL` you just pass the asset name, BUT unlike it these will all be asynchronous.
+Of course, you can read your assets in other ways as well. Like `getFileURL` you just pass the asset name, BUT unlike it these will all be asynchronous, excluding `getFileBlob`.
 
 * `getFileText` is the asset's raw text content. 
 * `getFileJSON` is `getFileText` but it does `JSON.parse()` for you.
