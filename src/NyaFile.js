@@ -2,7 +2,20 @@ import {unzip} from "fflate";
 import mime from "mime";
 import path from "path";
 
-const fileExtensionRegex = /(?:\.([^./]+))?$/ // https://stackoverflow.com/a/680982
+// https://stackoverflow.com/a/680982
+const fileExtensionRegex = /(?:\.([^./]+))?$/
+
+// I'm so good at these names, it's a file in the NyaFile...
+class NyaFileFile {
+    /**
+     * @param {String} name
+     * @param {Uint8Array} data
+     */
+    constructor(name, data) {
+        this.blob = new Blob([data], { type: mime.getType(name) })
+        this.url = URL.createObjectURL(this.blob)
+    }
+}
 
 export default class NyaFile {
     defaultCache = {};
@@ -19,35 +32,59 @@ export default class NyaFile {
         if(!(arrayBuffer instanceof ArrayBuffer)) throw Error("nyalib: Please pass an ArrayBuffer when loading (or a blob, which will be converted automatically).")
         // I <3 CALLBACKS (major /s it looks ugly)
         return new Promise((resolve, reject) => {
+            console.log(arrayBuffer)
             unzip(new Uint8Array(arrayBuffer), (err, data) => {
                 if(err) reject(err);
 
                 const tempCache = {} // I imagine if we suddenly set the real cache to {} react would collapse on itself. This is react babysitting code
                 Object.entries(data).forEach(([name, data]) => {
                     if(name.endsWith("/")) return;
-                    const blob = new Blob([data], { type: mime.getType(name) });
-                    tempCache[name.slice(0, -fileExtensionRegex.exec(name)[0].length)] = {blob, url: URL.createObjectURL(blob)};
+                    tempCache[name.slice(0, -fileExtensionRegex.exec(name)[0].length)] = new NyaFileFile(name, data);
                 })
+
+                let URLsToKill;
                 if(isDefault) {
+                    URLsToKill = Object.values(this.defaultCache).map(file => file.url);
                     this.defaultCache = tempCache
                 } else {
+                    URLsToKill = Object.values(this.skinCache).map(file => file.url);
                     this.skinCache = tempCache
                 }
+                URLsToKill.forEach(url => URL.revokeObjectURL(url))
                 resolve();
             });
         })
     }
 
-    getFileURL(fileName) {
-        if(this.skinCache[fileName]) return this.skinCache[fileName].url;
-        if(this.defaultCache[fileName]) return this.defaultCache[fileName].url;
+    /**
+     * This will get the file from skinCache first and defaultCache otherwise. Neither? Puke!
+     * You can get basically everything you want from this through friendlier functions.
+     * @private
+     * @param fileName
+     * @returns {NyaFileFile}
+     */
+    getInternalFile(fileName) {
+        if(this.skinCache[fileName]) return this.skinCache[fileName];
+        if(this.defaultCache[fileName]) return this.defaultCache[fileName];
         throw Error(`nyalib: ${fileName} isn't in the default Nyafile.`);
     }
 
+    getFileBlob(fileName) {
+        return this.getInternalFile(fileName).blob;
+    }
+
+    /** @returns {Promise<ArrayBuffer>} */
+    async getFileBuffer(fileName) {
+        return this.getInternalFile(fileName).blob.arrayBuffer()
+    }
+
+    getFileURL(fileName) {
+        return this.getInternalFile(fileName).url;
+    }
+
+    /** @returns {Promise<String>} */
     async getFileText(fileName) {
-        if(this.skinCache[fileName]) return this.skinCache[fileName].blob.text();
-        if(this.defaultCache[fileName]) return this.defaultCache[fileName].blob.text();
-        throw Error(`nyalib: ${fileName} isn't in the default Nyafile.`);
+        return this.getInternalFile(fileName).blob.text();
     }
 
     async getFileJSON(fileName) {
@@ -55,9 +92,7 @@ export default class NyaFile {
     }
 
     getFileType(fileName) {
-        if(this.skinCache[fileName]) return this.skinCache[fileName].blob.type;
-        if(this.defaultCache[fileName]) return this.defaultCache[fileName].blob.type;
-        throw Error(`nyalib: ${fileName} isn't in the default Nyafile.`);
+        return this.getInternalFile(fileName).blob.type;
     }
 
     listFiles() {
