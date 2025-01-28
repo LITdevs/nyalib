@@ -26,6 +26,6 @@ If you use `load()` again while already having a default/skin Nyafile, the cache
 
 Of course, you can read your assets in other ways as well. Like `getFileURL` you just pass the file name, BUT unlike it these will all be asynchronous.
 
-`getFileText`, `getFileJSON`, `getFileBuffer`, and `getFileBlob` are all different ways to read your assets. The first and last are self-explanatory enough I hope. `getFileJSON` is `getFileText` but it does `JSON.parse()` for you, and getFileBuffer is thefile as an ArrayBuffer.
+`getFileText`, `getFileJSON`, `getFileBuffer`, and `getFileBlob` are all different ways to read your assets. The first and last are self-explanatory enough I hope. `getFileJSON` is `getFileText` but it does `JSON.parse()` for you, and `getFileBuffer` is the file as an ArrayBuffer.
 
 It's important to note that since nyalib v3 was revamped to have blob URLs as the main focus, these alternative formats are a bit neglected at the moment. **There is no caching for alternative formats.** I am sorry.

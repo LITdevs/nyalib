@@ -32,7 +32,6 @@ export default class NyaFile {
         if(!(arrayBuffer instanceof ArrayBuffer)) throw Error("nyalib: Please pass an ArrayBuffer when loading (or a blob, which will be converted automatically).")
         // I <3 CALLBACKS (major /s it looks ugly)
         return new Promise((resolve, reject) => {
-            console.log(arrayBuffer)
             unzip(new Uint8Array(arrayBuffer), (err, data) => {
                 if(err) reject(err);
 
