@@ -1,6 +1,13 @@
 # nyalib
 
-This is a library used for handling Nyafiles in Quarky.
+This is a library used for handling Nyafiles, ZIP files distinguished with the .nya extension, in Quarky and other web apps. 
+
+The intent is for most of your aesthetical files to be contained in a Nyafile. Since they are, and you pull them out of nyalib, a secondary Nyafile can be loaded, providing no-effort [skinning](https://en.wikipedia.org/wiki/Theme_(computing)) for those files.
+
+## Security reminder...
+nyalib is a simplistic library that handles the main logistics of loading and reading from a Nyafile and layering one more on top. nyalib cannot guarantee the integrity of any Nyafile it loads, and is not expected to. You should only use nyalib, and in turn Nyafiles, for aesthetical customization functionality.
+
+Also, keep in mind that you are most likely using this in a web browser. Web browsers are big and can have bugs. [Nasty](https://nvd.nist.gov/vuln/detail/cve-2023-4863) bugs. **Your users are at risk of malicious Nyafiles!** It is a good idea to have a skin sharing platform, so that you can review Nyafiles in advance and decline or take down Nyafiles you discover to be malicious. It also finding skins more convenient for your users.
 
 ## Usage
 
@@ -12,15 +19,17 @@ const nyafile = new NyaFile();
 await nyafile.load((await fetch("https://quarky.nineplus.sh/quarky.nya")).arrayBuffer(), true);
 ```
 
-Here we use nyalib to load an external Nyafile. Notice that we are passing a boolean to `load()`. This indicates that the Nyafile we are loading will be our *default* Nyafile. You can omit that for it to be a *skin* Nyafile. Assets are loaded in the order of skin -> default -> error.
+Here we use nyalib to load an external Nyafile. It takes ArrayBuffers or Blobs, so we are converting the fetch accordingly before passing it.
 
-If you use `load()` again while already having a default/skin Nyafile, the respective cache will get overwritten with the new one and any old blob URLs will be released.
+Notice that we are passing a truthy value to `load()` after the buffer. This indicates that the Nyafile we are loading will be our *default* Nyafile. You can omit that for it to be a *skin* Nyafile. If a file is present in the skin, the skin's copy is prioritized over the default in all getters.
+
+If you use `load()` again while already having a default/skin Nyafile, the respective cache will get overwritten with the new one and any old blob URLs will be released. As a result, you can only have one default and (optionally) one skin Nyafile loaded at a time.
 
 ### Blob URLs
 
 nyalib v3 is very easy to use if you just want [blob URLs](https://www.w3.org/TR/FileAPI/#url). With the NyaFile instance you created, pass an asset's name **without the file extension** to `getFileURL(name)`. There's your blob URL, use it wherever you throw your media.
 
-Why no file extension? Let's say your original asset was a jpg and the skin has a png instead. This wouldn't work normally. Therefore file extensions are ignored in nyalib. You can use `getFileType` to see what the MIME type was, but keep in mind this is just based on the extension, and doesn't guarantee that the file isn't a pipe bomb in disguise.
+Why no file extension? Let's say your original asset was a jpg and the skin has a png instead. This wouldn't work normally. Therefore file extensions are ignored in nyalib. You can use `getFileType` to see what the MIME type was, but keep in mind this is just based on the extension.
 
 ```js
 <img src={nyafile.getFileURL("img/hakase_pfp")} />
